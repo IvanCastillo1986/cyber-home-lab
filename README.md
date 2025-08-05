@@ -16,6 +16,8 @@
 The following file is meant to assist in the maintenance and troubleshooting of the project's components:<br>
 [maintenance](maintenance.md)
 
+## Creating Virtual Machines
+[Ubuntu](Ubuntu.md)<br>
 
 
 
