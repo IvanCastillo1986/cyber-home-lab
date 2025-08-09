@@ -105,11 +105,13 @@ Select any snaps that you'd like. Like any other software, I usually install as 
 Finally, you can sit back and relax for a few while the installation happens. <br>
 <img src="./assets/Ubuntu-screenshots/Ubuntu27.png" width=700 /> <br>
 
-When installation is complete, you can minimize the terminal window. You'll need to go back into the main UTM window and virtually eject the Ubuntu iso file from the CD/DVD drive by clicking on it and clicking on `Clear`. <br>
+When installation is complete, select **Reboot Now** and press `Enter`.<br>
+<img src="./assets/Ubuntu-screenshots/Ubuntu29.png" width=700 /> <br>
+
+You'll be stopped with a message that lets you know that you'll need to remove the installation CD. Minimize the terminal window. You'll need to go back into the main UTM window and virtually eject the Ubuntu iso file from the CD/DVD drive by clicking on it and clicking on `Clear`. <br>
 <img src="./assets/Ubuntu-screenshots/Ubuntu28.png" width=700 /> <br>
 
-Then, go back to the serial terminal window, select **Reboot Now** and press `Enter`.<br>
-<img src="./assets/Ubuntu-screenshots/Ubuntu29.png" width=700 /> <br>
+Go back to the serial terminal window and accept the reboot again.<br>
 
 After the usual boot processes, you should see the login prompts.
 Enter your username and password.<br>
@@ -119,3 +121,30 @@ On first start-up, you'll want to run the Debian update and upgrade.<br>
 <img src="./assets/Ubuntu-screenshots/Ubuntu31.png" width=700 /> <br>
 
 Congrats! You've just created and installed your Ubuntu Virtual Machine.
+
+
+
+
+## Installing important software
+
+### Networking tools
+sudo apt install iputils-ping
+
+sudo apt install traceroute
+
+sudo apt install net-tools 
+(ifconfig, netstat)
+
+sudo apt install dnsutils
+
+sudo apt install nmap
+
+### Basic utilities
+sudo apt install nano
+
+sudo apt install man-db
+
+sudo apt install curl
+
+sudo apt install wget
+
