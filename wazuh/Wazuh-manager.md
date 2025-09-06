@@ -40,7 +40,6 @@ In this section, you’ll want to do a few things.<br>
 Since we’re installing Wazuh Indexer to the same Central node, add the IP address to the VM you’re currently on, inside the quotes. Add port `:9200` directly after it. <br>
 Uncomment the line with `protocol: “https”`.<br>
 Uncomment the `username` and `password` lines and replace it with the variables `${username}` and `${password}`.<br>
-Below these, write in a new property named `ssl`, and nested inside that write in the lines `certificate_authorities: ["/etc/wazuh-indexer/certs/root-ca.pem"]` and `verification_mode: “full”`.<br>
 In the example below, I’ve already edited the file:
 
 ```
@@ -50,10 +49,6 @@ output.elasticsearch:
 
   username: ${username}
   password: ${password}
-
-  ssl:
-    certificate_authorities: ["/etc/wazuh-indexer/certs/root-ca.pem"]
-    verification_mode: "full"
 ```
 
 Port 9200 is used by Elasticsearch to listen to external TCP traffic.<br>
@@ -80,8 +75,12 @@ Download a compressed version of the Wazuh module for Filebeat. Then extract the
 ## Deploy certificates
 The .tar file with the compressed certificates should already be in your home directory (or wherever you stored them), from the Wazuh Indexer installation. Change into the directory with the `wazuh-certificates.tar` file before continuing.
 
-Much like the Indexer installation, we’re going to assign an environment variable to pass in to upcoming commands. The node name should be the same as the value you passed into your Wazuh Indexer (for this documentation it was node-1). Just be sure it’s consistent with the name you assigned to it in the `config.yml` file. Do not store it in quotes:<br>
-`NODE_NAME=<your_server_node_name>`
+Now go into your `config.yml` file.
+Be sure to look closely at the name of your SERVER, and NOT the name of your indexer (node-1 by default).
+The default name of the server is `wazuh-1`, so it should still be that unless you purposely changed it.
+
+Much like the Indexer installation, we’re going to assign an environment variable to pass in to upcoming commands. The node name should be the same as the value you passed into your Wazuh Indexer (for this documentation it was node-1). Just be sure it’s consistent with the name you assigned to it in the `config.yml` file. Do not store it in quotes. Wazuh will use the names in these files when verifying or creating keys and signing certificates, so be sure that the information is accurate so you don’t have difficult errors down the line:
+$ NODE_NAME=<your_server_name>
 
 The following process will be very similar to the certificate deployment process you followed earlier, so just type in the commands in the following order:<br>
 ```
