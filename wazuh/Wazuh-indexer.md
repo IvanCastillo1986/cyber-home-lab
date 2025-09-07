@@ -12,6 +12,8 @@ The Central Node is comprised of 3 components:
 * Wazuh Server
 * Wazuh Dashboard
 
+Throughout this tutorial, many of the default values that the folks at Wazuh offer for IP addresses, hostnames, etc., will be replaced by this node's IP address for the Wazuh Indexer, Manager, Filebeat, and Dashboard. This IP will always be the same, and it will depend on consistency, since we're using the same Ubuntu Desktop instance for all 3 main Wazuh components. If for some reason you decide to expand and distribute these main components between different machine instances, these values will need to be changed throughout the various configuration files. New certificates might also need to be created and distributed for a new chain of trust, using these new values.
+
 
 ## Install Indexer
 We’ll be installing it as a single-node cluster for now, and then later cover the changes in configuration if we need to install more nodes.
