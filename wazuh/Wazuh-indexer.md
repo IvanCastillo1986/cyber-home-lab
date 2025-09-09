@@ -12,7 +12,10 @@ The Central Node is comprised of 3 components:
 * Wazuh Server
 * Wazuh Dashboard
 
-Throughout this tutorial, many of the default values that the folks at Wazuh offer for IP addresses, hostnames, etc., will be replaced by this node's IP address for the Wazuh Indexer, Manager, Filebeat, and Dashboard. This IP will always be the same, and it will depend on consistency, since we're using the same Ubuntu Desktop instance for all 3 main Wazuh components. If for some reason you decide to expand and distribute these main components between different machine instances, these values will need to be changed throughout the various configuration files. New certificates might also need to be created and distributed for a new chain of trust, using these new values.
+Throughout this tutorial, many of the default values that the folks at Wazuh offer for IP addresses, hostnames, etc., will be replaced by this node's IP address for the Wazuh Indexer, Manager, Filebeat, and Dashboard. This IP will always be the same, and it will depend on consistency, since we're using the same Ubuntu Desktop instance for all 3 main Wazuh components. If for some reason you decide to expand and distribute these main components between different machine instances, these values will need to be updated throughout the various configuration files. Certificates might also need to be created and distributed for an expanded chain of trust.
+
+## Wazuh Indexer
+After the Wazuh Manager has ingested and analyzed log data, another component called Filebeat securely forwards it to the Indexer. The Indexer is responsible for indexing and storing the data, which will wait to be queried by the Wazuh Dashboard.
 
 
 ## Install Indexer
@@ -136,7 +139,9 @@ First, let’s use the following command in the terminal to create a bash shell 
 `NODE_NAME=node-1`
 
 We’ve just saved a global environment variable.<br>
-Now, whenever you run a command in Bash with a dollar sign $ operator, the successive characters will invoke that environment variable’s value. It’s like a programming language’s variables, except to be stored and accessed within a CLI’s shell. We’ll need to pass in our `node-1` value to some of the following commands.
+Now, whenever you run a command in Bash with a dollar sign $ operator, the successive characters will invoke that environment variable’s value. It’s like a programming language’s variables, except to be stored and accessed within a CLI’s shell. We’ll need to pass in our `node-1` value to some of the following commands. 
+
+NOTE: the following commands will use the configuration fields that you filled out earlier, for the node's name and IP address. It will use these values to create the certificates. If a value is incorrect, the components will fail to authenticate later. So be sure that the values for node name and IP address are correct before proceeding.
 
 Create the `/etc/wazuh-indexer/certs` directory:
 `mkdir /etc/wazuh-indexer/certs`
@@ -190,3 +195,8 @@ Check that the newly installed single node cluster is working correctly:<br>
 `curl -k -u admin:admin https://<your_indexer_ip_address>:9200/_cat/nodes?v`
 
 Alternatively, you can open a browser and access the site through the URL bar. The username and password will originally be `admin` and `admin` (until you change it like a good cybersecurity professional!).
+
+
+# Configuration Files
+`/home/wazuh_manager/config.yml`<br>
+`/etc/wazuh-indexer/opensearch.yml`

@@ -6,7 +6,7 @@ These generated alerts and data can be used by security professionals for monito
 
 The Wazuh Server itself is comprised of two components:
 * Wazuh Manager:  this is the closest thing to the brain of the Wazuh SIEM system. This is what collects and analyzes data received from the agents. It’s also what triggers alerts for security events.
-* Filebeat:  this works closely with the Manager, by securely forwarding the security events to the Wazuh Indexer.
+* Filebeat:  this works closely with the Manager, by securely forwarding the security events to the Wazuh Indexer, via TLS encryption.
 
 In this portion, we’ll be installing both.<br>
 The Wazuh Server will be installed on the same VM as the Wazuh Indexer, joining it as the Central Node.
@@ -155,3 +155,8 @@ elasticsearch: https://192.168.103.101:9200...
 ```
 
 Congrats! You’re almost done installing the Wazuh Central node.
+
+
+# Configuration Files
+`/etc/filebeat/filebeat.yml`<br>
+`/var/ossec/etc/ossec.conf`

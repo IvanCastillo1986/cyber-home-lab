@@ -95,3 +95,8 @@ Open your browser and navigate to the Wazuh website, which should be the same IP
 
 Use the user ‘admin’ with the random password assigned to you.<br>
 You now have a strong password. 
+
+
+# Configuration
+`/etc/wazuh-dashboard/opensearch_dashboards.yml`<br>
+`/usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml`
