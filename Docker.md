@@ -2,12 +2,10 @@
 This guide will walk you through how to install Docker on the widely supported Ubuntu OS. This will spare you on potential issues during installation and time spent on troubleshooting dependency conflicts from other potentially unsupported systems.
 
 
-
 ## Update Ubuntu
 With the following commands:<br>
 `sudo apt update`<br>
 `sudo apt upgrade`
-
 
 
 ## Uninstall Packages
@@ -19,11 +17,10 @@ Remove them with:<br>
 Note: the output might report that 0 dependencies were removed, because you might not have them. But it's still good to run the command to be sure.
 
 
-
 # Docker Engine
 
 ## Install Docker repository
-First, you'll need to set up Docker's repistory by copy/pasting the following block of commands:
+First, you'll need to set up Docker's repository by copy/pasting the following block of commands:
 
 ```
 # Add Docker's official GPG key:
@@ -53,7 +50,6 @@ These commands will:
 6. in short, this long command creates a file that tells `apt` package manager where to find the latest Docker software for your specific version of Ubuntu, and use a special GPG key to verify that the downloaded Docker software is genuine and untampered.
 
 
-
 ## Install Docker packages
 Install with the following command:<br>
 `sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
@@ -62,7 +58,6 @@ Confirm the install at the following prompt with:<br>
 `y`
 
 ![install-docker](./assets/Docker-screenshots/install-docker.png)
-
 
 
 ## Start Docker
@@ -75,14 +70,13 @@ Verify proper Docker installation by accessing an image on Docker Hub:<br>
 ![start-docker](./assets/Docker-screenshots/start-docker.png)
 
 
-
-
 # Docker Compose
 This makes managing your applications that implement Docker a little easier. 
 You can just create one generic YAML file that will grab the specific containers and services that you need, and spin them up correctly so that they can communicate with each other.
-You will be spinning up a few different containers, and those containers are taking advantage of services from other containers.
 
-For example, the front-end and back-end will be taking advantage of an OpenSearch container that will be running the OpenSearch service within it. So it needs to be able to not only install OpenSearch and get that up and running, but it also needs to communicate with it.
+You will be spinning up a few different containers, and those containers are taking advantage of services from other containers. For example, the front-end and back-end will be taking advantage of an OpenSearch container that will be running the OpenSearch service within it. So it needs to be able to not only install OpenSearch and get that up and running, but it also needs to communicate with it.
+
+Furthermore, this YAML file allows a defined environment to be reproducible amongst different instances. Organizations can use this image to create a baseline configuration to define every new instance.
 
 
 ## Install Docker Compose plugin
