@@ -61,13 +61,26 @@ Be sure to execute this section only after installing Docker and Docker Compose.
 Locally clone the Shuffle git repository:<br>
 `git clone https://github.com/shuffle/Shuffle`
 
-Change into the new `Shuffle` directory:<br>
+Change into the new `Shuffle` directory, and check its files:<br>
 `cd Shuffle`
+`ls`
 
-Run the `docker-compose.yml` configuration:<br>
-`sudo docker compose up -d`
+Recursively change the permissions of `shuffle-database`, and all of its contents:<br>
+`sudo chown -R 1000:1000 shuffle-database`
 
-Check the currently running Docker containers:<br>
-`sudo docker ps`
+“Swap memory” is a modern computer system’s method of provisioning a section of hard disk storage for memory when the system has run out of RAM from too many processes running. Shuffle runs on top of Kubernetes. Due to various performance-related issues, Kubernetes requires swap to be disabled by default since version 1.8. So let’s turn off swap:<br>
+`swapoff -a`
+
+Run the `docker-compose.yml` configuration, and wait for the initial download and setup:<br>
+`docker compose up -d`
+
+## What just happened?
+After running `docker compose up`, Docker Compose used the definitions within the `docker-compose.yml` file to return a bunch of images from Docker Hub, and start them within containers. You can see which containers are currently running with `docker ps`. 
 
 ...as you can see, there are a whole lot of Shuffle containers running after executing the `docker compose up` command!
+
+
+# Signing In
+Once installed, you can log into the Shuffle platform through a web browser. Which means you'll need a desktop instance with a GUI. Your Wazuh Manager Ubuntu desktop instance might be good for that, so spin it up if it's not already on. Open the web browser, and navigate to `https://<your_shuffle-ubuntu_ip_address>:3443`. As this is your first log in, you'll create your username and password on this login screen. Afterwards, the system will ask you to login again. Use the same credentials you've just created.
+
+Congrats! You're finally in the Shuffle app!<br>
