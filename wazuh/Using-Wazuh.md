@@ -71,7 +71,7 @@ Write out and close.<br>
 Navigate to the Wazuh Manager’s **File Integrity Monitor**  ->  **Events** panel.<br>
 You might need to hit the refresh button on the top right of the Events dashboard window. 
 
-Congrats! Modifications to any files nested within the chosen directory will trigger an event entry.
+Congrats! Modifications to any files nested within the chosen directory will trigger an event entry. <br>
 (Tip:  adding or deleting any nested directories will not trigger changes, unless you modify a file within it.)
 
 
@@ -86,17 +86,17 @@ Add the `report_changes` property to the `<directories>` tag to include a log in
 </syscheck>
 ```
 
-Log files for `report_changes`:
+Log files for `report_changes`:<br>
 `/var/ossec/queue/diff/local/`
 
 
 ### Changing scan schedule
-There are two forms of scheduling.
+There are two forms of scheduling.<br>
 One is set to execute at the same repeating interval, and the others are set at your desired times.
 
-Open the global config:
+Open the global config:<br>
 `/var/ossec/etc/ossec.conf`
 
-Scroll down to about the 107th line within the `<syscheck>` tag. Change the default interval number to your desired wait between:
+Scroll down to about the 107th line within the `<syscheck>` tag. Change the default interval number to your desired wait between:<br>
 `<frequency>900</frequency>`
 
