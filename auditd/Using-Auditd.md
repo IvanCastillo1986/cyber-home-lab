@@ -12,6 +12,7 @@ Luckily this configuration file isnt too big. Near the top of the page, you’ll
 As you can see, it automatically rotates its own files when it gets too big. A few lines down from the top, you can find the following property:<br>
 `max_log_file = 8`<br>
 The digit is the amount of MB before logs are rotated. The default is 8MB.
+Note that while other log rotation schemes depend on time reached, this one depends on storage space occupied before rotating.
 
 Right below that line is another property:<br>
 `num_logs = 5`<br>
