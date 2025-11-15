@@ -30,9 +30,9 @@ This is the general structure:<br>
 `-w /path/to/file -p permissions -k key_name`
 
 Examples:<br>
-`-w /etc/passwd -p wa -k identity_files`
-`-w /usr/bin/ -p x -k binary_execution`
-`-w /etc/ssh/sshd_config -p wa -k ssh_config`
+`-w /etc/passwd -p wa -k identity_files`<br>
+`-w /usr/bin/ -p x -k binary_execution`<br>
+`-w /etc/ssh/sshd_config -p wa -k ssh_config`<br>
 
 
 ### Syscall rules
@@ -50,8 +50,8 @@ Examples:<br>
 Add conditions to Syscall rules using filters.
 
 Examples:<br>
-`-a always,exit -S open -F uid=0 -k root_file_access`
-`-a always,exit -S open -F success=0 -k failed_file_access`
-`-a always,exit -F arch=b64 -S open -k file_access_64bit`
+`-a always,exit -S open -F uid=0 -k root_file_access`<br>
+`-a always,exit -S open -F success=0 -k failed_file_access`<br>
+`-a always,exit -F arch=b64 -S open -k file_access_64bit`<br>
 `-a always,exit -S all -F pid=1234 -k specific_process`
 
