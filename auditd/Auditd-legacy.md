@@ -1,4 +1,15 @@
-# Using Auditd
+# Legacy Auditd
+The meaning of this guide is to learn the legacy system for Auditd. The legacy system isn’t too different, it just doesn’t scale as well.<br>
+Make your way through this guide first, before you move onto the newer system for Auditd.
+It’s good to know about legacy systems in case you come across it in the field (plus some professionals like to stick to older methods).
+
+## Main Components
+auditd  -  the daemon that collects and logs events.<br>
+auditctl  -  CLI tool used to configure and manage rules.<br>
+ausearch  -  tool to search audit logs.<br>
+aureport  -  generates summary reports.<br>
+/etc/audit/rules.d/audit.rules -  where persistent rules are stored.
+
 
 ## Trigger file monitor #1
 Start by monitoring a sensitive file with the `-w` option, which stands for “watch”.<br>

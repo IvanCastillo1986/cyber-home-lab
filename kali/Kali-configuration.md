@@ -68,3 +68,27 @@ Test the configuration by pinging your gateway router, pinging google, and then 
 `ping 10.0.4.1`<br>
 `ping 8.8.8.8`<br>
 `ping 10.0.1.101`
+
+
+## Clipboard sharing
+By default, your host machine and Kali do not have access to clipboard sharing through UTM. This is something that has to be configured through Kali, and you might want to do it is soon as possible so you can conveniently copy and paste text.
+
+Ensure that your packages are updated:
+`sudo apt update && sudo apt upgrade -y`
+
+Install the Spice agent:
+`sudo apt install spice-vdagent`
+
+Enable the Spice agent so that it starts up with the system:
+`sudo systemctl enable spice-vdagent`
+
+Start the agent service:
+`sudo systemctl start spice-vdagent`
+
+Reboot your instance:
+`sudo reboot now`
+
+Test your clipboard after your computer restarts, by copy/pasting between your host machine and Kali.
+
+TIP:  the default copy shortcut for Kali on MacOS is  “shift+ctl+C”  and paste is  “shift+ctl+V”.
+

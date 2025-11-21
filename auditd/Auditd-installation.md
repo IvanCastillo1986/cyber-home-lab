@@ -3,7 +3,7 @@
 * Logs system calls and file accesses at the kernel level.
 * Tracks security-relevant events like privilege escalations, file modifications, and network access.
 * Provides immutable audit trails that are hard for attackers to tamper with.
-* Complements tools like Wazuh by providing deeper system visibility.
+* Complements tools like Wazuh by providing deeper system visibility, as well as centralized logging of these critical logs.
 
 ## Kernel level monitoring
 Sees everything that happens on the system.<br>
@@ -20,14 +20,12 @@ What was the result? (success/failure)
 Creates detailed timelines of system activity.<br>
 Essential for incident response and investigation.
 
-
-## Main Components
-auditd  -  the daemon that collects and logs events.<br>
-auditctl  -  CLI tool used to configure and manage rules.<br>
-ausearch  -  tool to search audit logs.<br>
-aureport  -  generates summary reports.<br>
-/etc/audit/rules.d/audit.rules -  where persistent rules are stored.
-
+## What auditd catches that other logs miss
+- File access (who read an important log, like /etc/shadow)
+- Privilege Escalation attempts
+- System Call violations
+- Raw Command execution
+- Network Socket creation
 
 ## 3 core concepts
 1. System Calls (syscalls):  these are the fundamental interface between a user-space application and the Linux kernel. When a program wants to open a file, create a process, or connect to a network, it makes a system call. We often audit these, since they provide control over the system. 
