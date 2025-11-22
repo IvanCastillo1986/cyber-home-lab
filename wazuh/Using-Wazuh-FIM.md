@@ -1,26 +1,5 @@
-# Wazuh Functions
+# Wazuh FIM
 
-
-## Vulnerabilities
-Wazuh can track down vulnerabilities. 
-
-Using your Wazuh Manager’s terminal, open the global configuration file, and scroll down about 117 lines:<br>
-`sudo nano /var/ossec/etc/ossec.conf`
-
-Toggle on the vulnerability detector:
-```
-<vulnerability_detector>
-	<enabled> no </enabled>
-</vulnerability_detector>
-```
--> &nbsp; and change to &nbsp; ->
-```
-<vulnerability_detector>
-	<enabled> yes </enabled>
-</vulnerability_detector>
-```
-
-<hr>
 
 ## File Integrity Monitoring (FIM)
 is a security process which detects changes in the integrity of files by monitoring, scanning, and verifying in real-time. It does this by scanning a baseline state, and creating a cryptographic checksum hash out of it. Unfortunately, this means that if a file or system has already been compromised when FIM is implemented, it probably won’t detect the anomalies because it will read the compromised system as the baseline state.
@@ -47,7 +26,7 @@ FIM-monitored directories and files must be declared in the configuration files.
 
 Tip:  I suggest only using the global for now. The groups seem like a specific use case to me.
 
-Adding entry to FIM
+### Adding entry to FIM
 I’ll use a `/hello/world` structure for demonstration purposes, but feel free to use any directory you’d like to monitor or test with.<br>
 Create the file (or skip this step if you’re adding a legitimate directory).<br>
 `sudo mkdir /hello`
@@ -58,7 +37,7 @@ Edit the global configuration file:
 Scroll about halfway down the file, til you find the `<syscheck>` tag under the `File Integrity Monitoring` comment.<br>
 Add a new entry under the `<directories>` tags.<br>
 Be sure to give it the `realtime` property set to “yes”, so that the changes update quickly:<br>
-`<directories realtime=“yes”>/hello</directories>`
+`<directories realtime=“yes”>/home/wazuh_user/hello</directories>`
 
 Write out and exit the text editor.<br>
 Restart the service:<br>
@@ -99,4 +78,14 @@ Open the global config:<br>
 
 Scroll down to about the 107th line within the `<syscheck>` tag. Change the default interval number to your desired wait between:<br>
 `<frequency>900</frequency>`
+
+
+## Troubleshooting FIM
+If changes from FIM aren't showing up in the Wazuh Manager's dashboard:<br>
+1. Changes might not have taken effect yet. You might need to wait a few seconds for data to show up on the dashboard.
+2. Go back to the `/var/ossec/etc/ossec.conf` configuration file and check for any syntax errors.
+3. Ensure that you have the `realtime="yes"` property on the `<directories>` tag, which enables real-time monitoring.
+4. You might have fogotten to restart the `wazuh-agent` service (or `wazuh-manager` if that's the instance you're testing).
+5. You might not have an absolute path in the tag. Wazuh can't automatically find your directory (like `/hello`) unless you've added an absolute path that stems from the root directory (like `/home/wazuh_user/hello`).
+6. You are trying to monitor an actual file instead of directory. Wazuh is not currently able to accept a file as the subject for FIM. So you need to choose a directory.
 

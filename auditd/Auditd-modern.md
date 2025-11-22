@@ -100,3 +100,36 @@ The output will contain lots of information. Amongst the most notable takeaways 
 * they used `root` privileges
 * they did it from the `/home/wazuh_manager` home directory
 
+
+## Trigger Syscall rule #1
+Let’s move onto the next type of rule: Syscalls (aka System Calls).<br>
+These rules are loaded into a matching engine every that intercepts each system call that any program in your system makes. Which can create a large performance impact on your system. So try not to use many of them, or try to combine them into fewer rules. 
+
+Syscall form:<br>
+`-a action,list -S syscall -F field=value -k keyname`
+
+* -a  :  this option tells the kernel’s rule-matching engine to append a rule at the end of the rule list. We’re also telling it if it should create an event record for logs (always) or not.
+* -S  :  this field is for the syscall name. You can also use the syscall number, but it’s not as descriptive to humans. You can add more syscalls to the same rule for efficiency by including more `-S` fields. 
+* -F  :  this is an optional field to fine-tune your rule. More information beyond the scope of this guide can be found in the man pages. 
+* -k  :  it’s the key field to give your rule meaning, and a name to queue events when using the `ausearch` command.
+
+Create a new file in `/etc/audit/rules.d`, and give it whatever name you’d like, for a file for system calls (or a file for rules monitoring deletions).
+
+Let’s write our first syscall rule which will trigger events on file deletion:<br>
+`-a always,exit -S unlinkat -k file_deletion`
+
+A brief explanation on what these actually are up ahead. Under-the-hood, Linux is primarily written in the C programming language. And system calls are the fundamental interface between user-space programs and the kernel. Every system call is a function in C, and if you know how to code in C, you can go into the source code to see what each of these system call functions do. When auditd monitors a system call, it “hooks” into the kernel’s system call entry/exit points. There are many Linux system call functions which you can monitor, and you can see them if you run the following command in your terminal:<br>
+`ausyscall dump`
+
+Back to the newly created rule.<br>
+Load the rule:<br>
+`sudo augenrules --load`
+
+Search for events on the syscall rule:<br>
+`sudo ausearch -k file_deletion -i`
+
+If you don’t see anything yet, that’s to be expected since you just wrote that rule.<br>
+So test the rule by creating and deleting a file:<br>
+`touch test-file.txt`<br>
+`rm test-file.txt`
+

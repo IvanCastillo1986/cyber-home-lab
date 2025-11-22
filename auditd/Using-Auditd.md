@@ -35,3 +35,13 @@ List your files again:<br>
 `sudo auditcl -l`
 
 Your file should no longer be returned in output.
+
+
+## Unecessary Noise
+Monitoring broad files and syscalls can create an overwhelming amount of log events to sift through.
+You can include an option in the command that tells ausearch to only include events from today:
+`sudo ausearch -k file_deletion -i --start today`
+
+Another method to manage your search through log events is to pipe it into a more human-readable experience:
+`sudo ausearch -k file_deletion -i | less`
+`sudo ausearch -k file_deletion -i | tail -n 30`
