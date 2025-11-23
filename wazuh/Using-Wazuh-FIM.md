@@ -80,6 +80,60 @@ Scroll down to about the 107th line within the `<syscheck>` tag. Change the defa
 `<frequency>900</frequency>`
 
 
+## Creating custom FIM rule
+Create a custom rules file inside of your Wazuh Manager's `/var/ossec/etc/rules` directory:<br>
+`sudo touch /var/ossec/etc/rules/test_FIM`
+
+Add the following rule definition to your newly created file:<br>
+```
+<group name="syscheck">
+  <rule id="100002" level="8">
+    <if_sid>550</if_sid>
+    <field name="file">.sh$</field>
+    <field name="changed_fields">^permission$</field>
+    <field name="perm" type="pcre2">\w\wx</field>
+    <description>Execute permission added to shell script.</description>
+    <mitre>
+      <id>T1222.002</id>
+    </mitre>
+  </rule>
+</group>
+```
+
+When your `wazuh-manager` daemon starts up, it loads any custom rules files inside of that directory.<br>
+Restart the service so your new rule takes effect:<br>
+`sudo systemctl restart wazuh-manager`
+
+On your Wazuh Agent, create a new directory to monitor in your home directory. Replace <your_username> with your actual username on the Wazuh Agent's VM instance:<br>
+`sudo mkdir /home/<your_username>/FIM-test`
+
+Create a new shell script inside of that directory to trigger alert:<br>
+`sudo touch /home/<your_username>/FIM-test/test-script.sh`
+
+Open the Wazuh Agent's configuration file with a text editor:<br>
+`sudo nano /var/ossec/etc/ossec.conf`
+
+Scroll halfway down the file, and find the `<syscheck>` tag.<br>
+Add the following `<directories>` tag within it to monitor the new directory with the test script:
+```
+<syscheck>
+   <directories realtime="yes"> /home/<your_username>/FIM-test </directories>
+</syscheck>
+```
+
+Restart the `wazuh-agent` service to load the new configuration:<br>
+`sudo systemctl restart wazuh-agent`
+
+By default, execute permissions are off when you create a new file on Linux systems (for good reason). But we'll be adding execute permissions in order to trigger the FIM alert:<br>
+`sudo chmod +x /home/<your_username>/FIM-test/test-script.sh`
+
+Go back to your Wazuh Manager instance.<br>
+Navigate to the Wazuh Manager’s **File Integrity Monitor**  ->  **Events** panel.<br>
+You might need to hit the refresh button on the top right of the Events dashboard window. 
+
+Near the top of the list of events in the bottom panel, you should see an event entry that reads the same `description` that you added to the custom rule you created: `Execute permissions added to script`.
+
+
 ## Troubleshooting FIM
 If changes from FIM aren't showing up in the Wazuh Manager's dashboard:<br>
 1. Changes might not have taken effect yet. You might need to wait a few seconds for data to show up on the dashboard.
