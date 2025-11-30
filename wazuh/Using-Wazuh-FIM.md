@@ -134,6 +134,36 @@ You might need to hit the refresh button on the top right of the Events dashboar
 Near the top of the list of events in the bottom panel, you should see an event entry that reads the same `description` that you added to the custom rule you created: `Execute permissions added to script`.
 
 
+## Setting recursion level
+This comes in handy when there’s too much noise from nested files that are probably false positives. Like say for example, while monitoring the home directory with Firefox browser’s processes continously being changed as you use the Wazuh Dashboard. Firefox will constantly change it’s files and configuration under-the-hood to manage its own files, but Wazuh might not know that. So you can choose a recursion level so that the agent does not give alerts on deeply nested files and directories.
+
+Open the configuration file with an editor:<br>
+`sudo nano /var/ossec/etc/ossec.conf`
+
+Add `recursion_level` and replace <your_username> with your actual username:<br>
+`<directories recursion_level=“3” whodata=“yes” realtime=“yes” report_changes=“yes” check_all=“yes”> /home/<your_username> </directories>`
+
+Now, the Wazuh service will only alert on integrity changes up to level 3 nested items.
+
+
+## Change process priority
+If you now of the `nice` value in Linux’s `top` utility, this is pretty much the same concept. A higher value of `nice` means give the process lower priority. As such, setting a higher `process_priority` gives the Wazuh process a lower priority. And like `nice` or `renice`, this value ranges between -20 and 19. Let’s try this on Wazuh’s FIM module.
+
+Open the configuration file:<br>
+`sudo nano /var/ossec/etc/ossec.conf`
+
+The `<syscheck>` tag represents the FIM module, so this tag is what takes the <process_priority>. Give it whatever value you’d like. In my example, I actually increased the FIM’s value to a higher priority:
+```
+<syscheck>
+    <process_priority> -10 </process_priority>
+</syscheck>
+```
+
+Save and exit. Reload the configuration so the changes take effect:<br>
+`sudo systemctl restart wazuh-agent`
+
+
+
 ## Troubleshooting FIM
 If changes from FIM aren't showing up in the Wazuh Manager's dashboard:<br>
 1. Changes might not have taken effect yet. You might need to wait a few seconds for data to show up on the dashboard.
