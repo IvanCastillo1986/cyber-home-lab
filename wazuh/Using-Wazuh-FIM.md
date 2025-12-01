@@ -169,7 +169,7 @@ If changes from FIM aren't showing up in the Wazuh Manager's dashboard:<br>
 1. Changes might not have taken effect yet. You might need to wait a few seconds for data to show up on the dashboard.
 2. Go back to the `/var/ossec/etc/ossec.conf` configuration file and check for any syntax errors.
 3. Ensure that you have the `realtime="yes"` property on the `<directories>` tag, which enables real-time monitoring.
-4. You might have fogotten to restart the `wazuh-agent` service (or `wazuh-manager` if that's the instance you're testing).
+4. You might have forgotten to restart the `wazuh-agent` service (or `wazuh-manager` if that's the instance you're testing).
 5. You might not have an absolute path in the tag. Wazuh can't automatically find your directory (like `/hello`) unless you've added an absolute path that stems from the root directory (like `/home/wazuh_user/hello`).
 6. You are trying to monitor an actual file instead of directory. Wazuh is not currently able to accept a file as the subject for FIM. So you need to choose a directory.
 
