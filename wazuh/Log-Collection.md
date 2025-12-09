@@ -193,3 +193,53 @@ Before disconnecting from the remote SSH, you’ll want to stop the cronjob from
 And delete the cronjob you added previously.<br>
 The alerts should now have stopped from flooding your Wazuh Dashboard.
 
+
+## Log Data Analysis Phases
+To explain, let’s use the following sample log:
+`Feb 14 12:19:04 192.168.1.1 sshd[25474]: Accepted password for Stephen from 192.168.1.133 port 49765 ssh2`
+
+### Pre-decoding
+Log analysis engine extracts syslog-like information (timestamp, hostname, etc, from log header), and maps it to key-value pairs.
+
+Example:
+```
+timestamp: 'Feb 14 12:19:04'
+hostname: '192.168.1.1'
+program_name: 'sshd'
+```
+
+### Decoding
+Log analysis engine looks for a decoder that matches the sample log. Decoders will be in the `/var/ossec/rulesets/decoders` directory on the server. During the pre-decoding phase, the engine was able to map `program_name` to `sshd`. The analysis engine can now use this information to pick out the decoder below.
+
+Example of decoders that match sample log:
+```
+<decoder name="sshd">
+  <program_name>^sshd</program_name>
+</decoder>
+
+<decoder name="sshd-success">
+  <parent>sshd</parent>
+  <prematch>^Accepted</prematch>
+  <regex offset="after_prematch">^ \S+ for (\S+) from (\S+) port (\S+)</regex>
+  <order>user, srcip, srcport</order>
+  <fts>name, user, location</fts>
+</decoder>
+```
+
+The decoder `sshd` matches the program name `sshd`.<br>
+The decoder `sshd-success` uses the regex to extract `Stephen`, `192.168.1.133`, and `49765` from the sample log.
+
+
+### Rule Matching
+The Wazuh Server looks for matching rules in the `var/ossec/ruleset/rules` directory. It finds a match to the sample log in rule with ID `5715`. 
+```
+<rule id="5715" level="3">
+  <if_sid>5700</if_sid>
+  <match>^Accepted|authenticated.$</match>
+  <description>sshd: authentication success.</description>
+  <group>authentication_success,pci_dss_10.2.5,</group>
+</rule>
+```
+
+The Wazuh Server generates alerts whose levels are 3 and greater by default. The log triggers an alert because the `level` of the sample rule above is `3`.
+
