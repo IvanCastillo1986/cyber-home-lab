@@ -41,3 +41,74 @@ Wazuh provides an out-of-the-box decoders at `var/ossec/ruleset/decoders/` that 
 ## Decoding and rule-matching
 The pre-decoding phase of the analysis workflow extracts data from the raw log header (like timestamp, hostname, program name). Then, the analysis engine looks for a decoder to match the log. If a decoder is found, the engine uses the decoder to extract even more fields and matches the appropriate rules to generate security alerts. If no matching decoder is found, the log is ignored (Wazuh assumes it’s unimportant).
 
+
+## Monitoring running processes
+This is an exercise in which netcat is used, and is detected by Wazuh with the Command Monitoring module. 
+
+First, install `ncat` and `nmap` (ncat is an extension of the nmap suite of tools):
+```
+sudo apt update
+sudo apt install ncat nmap -y
+```
+
+Add the following configuration block to the Wazuh Agent’s `/var/ossec/etc/ossec.conf` configuration file:
+```
+<ossec_config>
+  <localfile>
+    <log_format>full_command</log_format>
+    <alias>process list</alias>
+    <command>ps -e -o pid,uname,command</command>
+    <frequency>30</frequency>
+  </localfile>
+</ossec_config>
+```
+
+Restart the agent service:<br>
+`sudo systemctl restart wazuh-agent`
+
+Now pull up your Wazuh Server.<br>
+Add the following rules bllock to your `/var/ossec/etc/rules/local_rules.xml` file:
+```
+<group name="ossec,">
+  <rule id="100050" level="0">
+    <if_sid>530</if_sid>
+    <match>^ossec: output: 'process list'</match>
+    <description>List of running processes.</description>
+    <group>process_monitor,</group>
+  </rule>
+
+  <rule id="100051" level="7" ignore="900">
+    <if_sid>100050</if_sid>
+    <match>nc -l</match>
+    <description>netcat listening for incoming connections.</description>
+    <group>process_monitor,</group>
+  </rule>
+</group>
+```
+
+You might’ve noticed that there are two rules there. The top rule is the “parent” rule, and the bottom rule is the “child” rule. The parent rule is like a filter before passing it down to a more specific rule. And if you look closely at the parent’s `<if_sid>` tag, you’ll see that this “parent” rule belongs to a “grandparent” rule with the id of 530. 
+
+You won’t be using it for this exercise, but this is what the grandparent rule looks like:
+```
+<rule id="530" level="0">
+  <match>^ossec: output:</match>
+  <description>List of running processes.</description>
+  <group>process_monitor,</group>
+</rule>
+```
+
+The rule chain looks like this:
+* The raw log looks something like this:  `ossec: output: 'process list': root 1234 nc -l -p 4444`. It’s caught by the grandparent rule as it gets filtered through all other rules.
+* Grandparent rule with id 530 catches all process list outputs from Wazuh’s Command Monitoring module. 
+* Parent rule with id 100050 filters from all process outputs, down to just process list outputs. This rule can have many children. For our case, child catches netcat.
+* Child rule with id 100051 is finally what triggers the alert. It alerts when netcat listeners are found in process lists.
+
+Back to the exercise.<br>
+Restart the service for new rules in configuration to take effect:<br>
+`sudo systemctl restart wazuh-manager`
+
+Now you’re ready to trigger the alert.<br>
+From your Wazuh Agent’s shell, run:<br>
+`nc -l 8000`
+
+You can view the alerts from the “Threat Hunting” page in your Wazuh Dashboard.
