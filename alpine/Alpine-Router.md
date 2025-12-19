@@ -90,6 +90,9 @@ sudo iptables -A FORWARD -i eth0 -o eth3 -m state --state RELATED,ESTABLISHED -j
 ```
 You’ve just set up the service to masquerade the IP address before the packet goes out. You’ve also enabled traffic to leave through each interface, and to return from each interface if the connection has already been established.
 
+Run the following command to load network configuration:
+`sudo rc-update networking restart`
+
 Enable the iptables service to start automatically when the system boots:<br>
 `sudo rc-update add iptables default`
 

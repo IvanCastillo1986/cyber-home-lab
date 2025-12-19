@@ -1,12 +1,46 @@
 # Alpine
+When the machine first spins up, it'll ask for a login. This initial login will be `root`. Initially, root has no password.<br>
+You'll then be greeted by the welcome text with a cursor prompt.<br>
+The Alpine installation has a special script that you can access by typing:<br>
+`setup-alpine`
+
+Choose keyboard layout:<br>
+`us`
+
+Select variant:<br>
+`us`
+
+Enter system hostname:<br>
+`alpine-gateway`
+
+Available interfaces are: eth0<br>
+Which one do you want to initialize:<br>
+press `Enter` to choose default `eth0`
+
+IP address for eth0?<br>
+press `Enter` for DHCP automatic assignment. We'll change this later.
+
+Any manual network configuration: `n`<br>
+
+New password:<br>
+Retype password:
+
+Which time zone:<br>
+`EST`
+
+Which NTP client to run:<br>
+press `Enter` for busybox
 
 Choose `f` to add the fastest mirror.<br>
 You can add your user now, or do it later.<br>
-Choose the disk that’s shown to format (might be `vda`)
+
+Choose the disk that’s shown to format (might be `vda`)<br>
+How would you like to use it?<br>
+For most users, the best simple option would be `sys`
 
 After the installation process has finished, you’ll be prompted to reboot system. But first you’ll need to remove the installation media. So use the `poweroff` command to shut down Alpine.
 
-Clear the .iso file from the CD drive.<br>
+Clear the .iso file from the CD drive by going to Settings -> Storage -> click on CD icon to the right -> `remove disk from virtual drive`<br>
 Turn the system back on.<br>
 Sign in as `root` login.<br>
 Run `apk update`. Alpine uses apk package manager, instead of apt.<br>
@@ -26,8 +60,11 @@ Now that you have sudo, let’s change some important user configurations.<br>
 It acts as a gatekeeper.<br>
 Let’s give your user admin privileges which can be easily updated by adding or removing it from the `wheel` group.
 
+Create a user if you didn't do it during setup:
+`adduser <username>`
+
 Add your user to the wheel group:<br>
-`addgroup alpine_gladiator wheel`
+`addgroup <username> wheel`
 
 Configure sudo file with `visudo`. This command will prevent errors in syntax and race conditions, which render sudo unusable:<br>
 `visudo`
