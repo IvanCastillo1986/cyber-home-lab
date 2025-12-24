@@ -69,10 +69,14 @@ Recursively change the permissions of `shuffle-database`, and all of its content
 `sudo chown -R 1000:1000 shuffle-database`
 
 “Swap memory” is a modern computer system’s method of provisioning a section of hard disk storage for memory when the system has run out of RAM from too many processes running. Shuffle runs on top of Kubernetes. Due to various performance-related issues, Kubernetes requires swap to be disabled by default since version 1.8. So let’s turn off swap:<br>
-`swapoff -a`
+`sudo swapoff -a`
 
 Run the `docker-compose.yml` configuration, and wait for the initial download and setup:<br>
-`docker compose up -d`
+`sudo docker compose up -d`
+
+The following command is recommended for Opensearch to work well:<br>
+`sudo sysctl -w vm.max_map_count=262144`
+
 
 ## What just happened?
 After running `docker compose up`, Docker Compose used the definitions within the `docker-compose.yml` file to return a bunch of images from Docker Hub, and start them within containers. You can see which containers are currently running with `docker ps`. 
