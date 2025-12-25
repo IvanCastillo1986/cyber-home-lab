@@ -67,7 +67,7 @@ Restart the agent service:<br>
 `sudo systemctl restart wazuh-agent`
 
 Now pull up your Wazuh Server.<br>
-Add the following rules bllock to your `/var/ossec/etc/rules/local_rules.xml` file:
+Add the following rules block to your `/var/ossec/etc/rules/local_rules.xml` file:
 ```
 <group name="ossec,">
   <rule id="100050" level="0">
