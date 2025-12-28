@@ -72,3 +72,34 @@ Now connect any other VM instance to your Wazuh Agent or Wazuh Manager instance 
 
 Go back to your Shuffle Dashboard. Click on the `Show previous run` button with icon of the running man in the bottom left. This should display a list of any executions that match our webhook’s configured rules.
 
+
+## Troubleshooting
+If you’re having issues with the Webhook trigger’s execution alerts showing up, it might be directly related to Wazuh not trusting Shuffle’s self-signed certificate. Check this in the logs at:<br>
+`sudo tail -f /var/ossec/logs/ossec.log`
+
+If you see anything like the following output in the logs, it’s an SSL issue:
+```
+2024/11/06 15:00:06 wazuh-integratord: ERROR: Unable to run integration for shuffle -> integrations
+2024/11/06 15:00:06 wazuh-integratord: ERROR: While running shuffle -> integrations. Output:
+2024/11/06 15:00:06 wazuh-integratord: ERROR: Exit status was: 7
+```
+...you’ll need to disable certification verification.
+
+Check where the following line is in the `shuffle.py` integration script, for post requests:<br>
+`sudo nl /var/ossec/integrations/shuffle.py | grep requests.post`
+
+It should be somewhere around line 184.<br>
+Open the file:<br>
+`sudo nano /var/ossec/integrations/shuffle.py`
+
+...and scroll down to that line. At the end of the post request, inside of the parenthesis, add `verify=False`:<br>
+`res = requests.post(url, data=msg, headers=headers, timeout=10, verify=False)`
+
+Restart the service:<br>
+`sudo systemctl restart wazuh-manager`
+
+Check the logs again. There should be no more of the previous error log events pertaining to SSL:<br>
+`sudo tail -f /var/ossec/logs/ossec.log`
+
+Go back to your Shuffle dashboard.<br>
+Click on the `Show previous run` button with icon of the running man in the bottom left. You should now see executions with the Webhook icon. 
