@@ -2,6 +2,13 @@
 Velociraptor is an open-source Digital Forensics and Incident Response (DFIR) platform that gives deep visibility into endpoints. It collects artifacts via its powerful VQL (Velociraptor Query Language) in investigations. While Wazuh detects threats, Velociraptor can investigate and respond to them.
 
 
+## Velociraptor Features
+* Endpoint Visibility:  allows user to see everything, from currently running processes to network connections.
+* Artifact Collection:  it automatically collects evidence that might be specific to the incident.
+* Timeline Reconstruction:  allows for a reconstruction of what happened and when it happened.
+* Real-time monitoring across multiple endpoints
+
+
 ## Reference
 opt/velociraptor  :  datastore directory where Velociraptor stores all files
 opt/velociraptor/logs  :  where logs are stored
@@ -9,6 +16,8 @@ opt/velociraptor/logs  :  where logs are stored
 8000  :  Frontend port to listen on
 8889  :  port for the GUI to listen on
 
+velociraptor_server  :  Velociraptor server’s systemd service (via systemctl)
+velociraptor_client  :  Velociraptor client’s systemd service (via systemctl)
 
 
 ## Install the Velociraptor server
@@ -60,4 +69,39 @@ NOTE: if you get an error underneath the service’s status, saying:<br>
 `sudo chown velociraptor:velociraptor /opt/velociraptor/config/inventory.json.db`
 
 Now get on your Ubuntu GNOME desktop instance. Open the browser. Replace <velociraptor_server_IP> with its actual IP address, followed by port `8889`:<br>
-`192.168.103.102:8889`
+`<velociraptor_server_IP>:8889`
+
+
+## Installing the agent
+This agent will be installed on an Ubuntu server. You might even want to consolidate storage and place it on the same instance as another application, such as Shuffle.
+
+First you’ll need to create the client config. Use your Ubuntu GNOME desktop instance’s browser to navigate to the Velociraptor dashboard at `<velociraptor_server_IP>:8889`. Click on the home icon on the top left. Scroll down to the section that reads “Current Orgs”. Click on the `client.root.config.yaml` button to download the config file. 
+
+Change into the `Downloads` directory:
+```
+cd
+cd Downloads
+```
+
+Use the `scp` command to securely copy the config file to your client:<br>
+`sudo scp client.root.config.yaml <client_username>@<client_IP_address>/home/<client_username>`
+
+From your Velociraptor server, do the same thing with the `velociraptor` binary:<br>
+`sudo scp velociraptor <client_username>@<client_IP_address>/home/<client_username>`
+
+From your client endpoint, check that you have both files:<br>
+`ls`
+
+Now that you have both the binary and the client configuration file, create the installation package:<br>
+`./velociraptor debian client --config client.root.config.yaml`
+
+Check that the new package is in your current directory:<br>
+`ls`
+
+Install the package:<br>
+`sudo dpkg -i velociraptor_client_0.75.6_arm64.deb`
+
+Now that you’ve finally installed the agent, check that the service is up and running:<br>
+`sudo systemctl status velociraptor_client`
+
+Congrats! You now have a deployed agent ready to be investigated.
