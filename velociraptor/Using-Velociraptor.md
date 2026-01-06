@@ -35,3 +35,50 @@ The event queries are run indefinitely as soon as the client starts. When an eve
 You can view the events by clicking on:<br>
 “Client Events”  ->  “Select artifact”  ->  <your_event_artifact_to_review><br>
 The timeline view at the top allows you to click to the place in time that you’d like to inspect. The details of the events are found beneath the timeline in a table-like structure. 
+
+
+## Notebook
+A notebook consists of a sequence of cells which can be edited. When not in use, a cell can appear as a seamless part of the document because it’s not decorated.
+
+Click on the Notebook icon in the left toolbar  ->  click “+” button  ->  fill out details  ->  “Launch”
+
+Before launching, you can choose a different template from the “Select Template” tab. Otherwise, you’ll start with the default `Notebooks.Default` artifact.
+
+A notebook will appear at the bottom half of the window.<br>
+Click on the “Add Cell” button which is a “+” at the right end of the Notebook’s toolbar. If you don’t see it, then you’re probably already in Edit mode. Click the “close” button at the left end of the notebook’s toolbar. Now you should have a longer toolbar. Click the “Add Cell” button. 
+
+You’ll get a dropdown menu with two choices:<br>
+* Markdown cell receives text and renders HTML
+* VQL cell can receive VQL queries
+
+
+## VQL
+Open your terminal and start the Velociraptor GUI:<br>
+`./velociraptor gui`
+
+This will create a new server configuration and start a server on your local machine. It also starts the local client communicating with the server. Remember that when you run a query in your notebook, you’re actually running it on the server. The server is evaluating that query. Thus, running the previous command will start a *temporary* server, on which we will run the queries from our notebook.
+
+Go back to your notebook.<br>
+Add a new cell.<br>
+Select the VQL option.<br>
+Then select the “Edit cell” button with the pencil icon.
+
+Type the following query into the VQL cell:<br>
+`SELECT * FROM info()`
+
+Click on the “Save and Run” button.<br>
+The system should return with the host information of your server.
+
+Congrats! You’ve just run your first query.
+
+Here is the structure of a VQL query:<br>
+`SELECT X,Y,Z FROM plugin(arg=1) WHERE X = 1`<br>
+* the SELECT keyword
+* a list of “Column Selectors”
+* the FROM keyword
+* a “VQL Plugin” (like the info() function) which can potentially take arguments. Plugins replace SQL tables.
+* the WHERE keyword followed by a filter expression
+
+In VQL, the data sources are not actually static tables on disk (the way SQL is). The data is provided by code that runs to generate rows. VQL Plugins produce rows and are positioned after the FROM clause. VQL plugins can take parameters (as in functions) to customize their operations. Sometimes the arguments are required, and sometimes they’re optional.
+
+A row in VQL is a key:value pair. It’s pretty much a member of a JSON object, or Python dictionary. The value in the row can be one of many types: string, byte, int64, float64, array, object, etc.
