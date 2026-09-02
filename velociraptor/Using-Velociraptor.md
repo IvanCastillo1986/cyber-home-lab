@@ -82,3 +82,5 @@ Here is the structure of a VQL query:<br>
 In VQL, the data sources are not actually static tables on disk (the way SQL is). The data is provided by code that runs to generate rows. VQL Plugins produce rows and are positioned after the FROM clause. VQL plugins can take parameters (as in functions) to customize their operations. Sometimes the arguments are required, and sometimes they’re optional.
 
 A row in VQL is a key:value pair. It’s pretty much a member of a JSON object, or Python dictionary. The value in the row can be one of many types: string, byte, int64, float64, array, object, etc.
+
+<!-- START from "Life of a query" in notes -->
